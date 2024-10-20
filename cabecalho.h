@@ -16,6 +16,9 @@ void atualiza_candidatos(celula **candidatos, float capacidade_atual);
 // escolhe aleatoriamente um item da RCL
 celula* escolha_aleatoria(celula *RCL);
 
+// calcula o valor da solucao
+float valor_solucao(celula *solucao);
+
 // gera um numero aleatorio entre x e y
 int random_number(int x, int y);
 

@@ -59,7 +59,7 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, float capacid
         // 1°: removo da lista de candidatos o item que estava na RCL e que foi colocado na solucao
         remocao(&candidatos, aux->item); 
 
-        //2°: removo da lista de candidatos todos os itens que tem pesso > que a capacidade atual da mochila
+        //2°: removo da lista de candidatos todos os itens que tem peso > que a capacidade atual da mochila
         atualiza_candidatos(&candidatos, capacidade_atual);
 
 
@@ -126,6 +126,16 @@ celula* escolha_aleatoria(celula *RCL){
     return RCL;
 }
 
+float valor_solucao(celula *solucao){
+    float valor = 0.0;
+
+    while(solucao != NULL){
+        valor += solucao->valor;
+        solucao = solucao->proximo;
+    }
+
+    return valor;
+}
 
 int random_number(int x, int y) {
     return x + rand() % (y - x + 1);
