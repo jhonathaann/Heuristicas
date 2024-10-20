@@ -22,13 +22,13 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, float capacid
         minimo =  min(candidatos);  // pegando o valor minimo da lista de candidatos
         
         // criando a RCL
-        cria_RCL(&RCL, candidatos, maximo, minimo, alpha);
+        cria_RCL(&RCL, &candidatos, maximo, minimo, alpha);
 
         // selecionando um item aleatorio da RCL
         celula *aux = escolha_aleatoria(RCL);
 
         // coloco na solucao o item escolhido aleatoriamente na RCL
-        insercao(aux->item, aux->peso, aux->valor, &solucao);  
+        insercao(aux->item, aux->peso, aux->valor, *&solucao);  
         capacidade_atual -= aux->peso;
 
         // atualizando a lista de candidatos
@@ -49,7 +49,7 @@ void cria_lista_candidatos(celula *itens, celula **candidatos,  float capacidade
 
     while(itens != NULL){
         if(itens->peso <= capacidade){
-            insercao(itens->item, itens->peso, itens->valor, &candidatos);
+            insercao(itens->item, itens->peso, itens->valor, *&candidatos);
         }
 
         itens = itens->proximo;
@@ -64,7 +64,7 @@ void cria_RCL(celula **RCL, celula **candidatos, float maximo, float minimo, flo
 
         if(aux->valor >= minimo + alpha * (maximo - minimo)){
             // insiro o valor na lista de candidatos restritos
-            insercao(aux->item, aux->peso, aux->valor, &RCL);
+            insercao(aux->item, aux->peso, aux->valor, *&RCL);
 
             // remove o item inserido da lista de candidatos
             // acho que eh apenas o item que eu selecionei aleatoriamente dela
@@ -83,7 +83,7 @@ void atualiza_candidatos(celula **candidatos, float capacidade_atual){
     while(aux != NULL){
 
         if(aux->peso > capacidade_atual){
-            remocao(&candidatos, aux->item);
+            remocao(*&candidatos, aux->item);
         }
 
         aux = aux->proximo;
@@ -205,4 +205,12 @@ int quantidadeItens(celula *inicio) {
     }
     
     return contador;
+}
+
+void imprimir(celula *lista){
+    
+    while(lista != NULL){
+        printf("Item: %d, Valor: %d, Peso: %d\n", lista->item, lista->valor, lista->peso);
+        lista = lista->proximo;
+    }
 }

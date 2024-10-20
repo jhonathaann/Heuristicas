@@ -3,8 +3,8 @@
 
 // struct para representar um item
 typedef struct cel{
-    int item;
-    float peso, valor;
+    int item, peso, valor;
+    //float peso, valor;
     struct cel *proximo;
 }celula;
 
@@ -59,5 +59,7 @@ void insercao(int item, float peso, float valor, celula **solucao);
 
 // remove um item da lista
 void remocao(celula **candidatos, int item);
+
+void imprimir(celula *lista);
 
 #endif
