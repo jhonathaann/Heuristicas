@@ -24,7 +24,12 @@ int main(){
         insercao(i+1, peso, valor, &itens);
     }
 
+    for(int i = 0; i < max_iteracoes; i++){
+        contrucao_gulosa_randomizada(itens, &solucao, capacidade, 0.5);
+    }
+
     imprimir(itens);
+    //imprimir(solucao);
 
     fclose(pt_arq);
 

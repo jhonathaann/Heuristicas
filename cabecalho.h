@@ -25,16 +25,16 @@ typedef struct y{
 }bonus_par;
 
 // fase de contrucao da solucao
-void contrucao_gulosa_randomizada(celula *itens, celula **solucao, float capacidade_mochila, float alpha);
+void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidade_mochila, float alpha);
 
 // cria lista de candidatos (aqules que cabem na mochila)
-void cria_lista_candidatos(celula *itens, celula **candidatos, float capacidade);
+void cria_lista_candidatos(celula *itens, celula **candidatos, int capacidade);
 
 // cria a lista de candidatos restritos (RCL)
-void cria_RCL(celula **RCL, celula **candidatos, float maximo, float minimo, float alpha);
+void cria_RCL(celula **RCL, celula **candidatos, int maximo, int minimo, float alpha);
 
 // atualiza a lista de candidatos
-void atualiza_candidatos(celula **candidatos, float capacidade_atual);
+void atualiza_candidatos(celula **candidatos, int capacidade_atual);
 
 // escolhe aleatoriamente um item da RCL
 celula* escolha_aleatoria(celula *RCL);
@@ -46,10 +46,10 @@ float valor_solucao(celula *solucao);
 int random_number(int x, int y);
 
 // achar o maior valor da lista
-float max(celula *lista);
+int max(celula *lista);
 
 // acha o menor valor da lista
-float min(celula *lista);
+int min(celula *lista);
 
 // conta quantos itens tem na lista
 int quantidadeItens(celula *inicio);
