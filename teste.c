@@ -14,10 +14,10 @@ typedef struct {
 
 int main() {
     // Array de pares de itens
-    ParItens pares[] = { {0, 1}, {2, 3} };
+    ParItens pares[] = { {1, 2}, {3, 4} };
 
     // Array de bônus associados aos pares de itens
-    BonusPar bonus_pares[] = { {{0, 1}, 10}, {{2, 3}, 150} };
+    BonusPar bonus_pares[] = { {{1, 2}, 10}, {{3, 4}, 150} };
 
     // Acessar os valores
     printf("Par: (%d, %d), Bonus: %d\n", bonus_pares[0].par.item1, bonus_pares[0].par.item2, bonus_pares[0].bonus);

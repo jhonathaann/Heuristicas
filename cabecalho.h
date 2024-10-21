@@ -10,19 +10,9 @@ typedef struct cel{
 
 // struct para representar um par de itens
 typedef struct x{
-    int item1;
-    int item2;
-
-    struct x *proximo;
+    int *item1;  // aloca esse vetor
+    int bonus;
 }par_itens;
-
-// struct para representar seu par de itens e seu bonus
-typedef struct y{
-    par_itens par;
-    float bonus;
-
-    struct y *proximo;
-}bonus_par;
 
 // fase de contrucao da solucao
 void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidade_mochila, float alpha);
@@ -59,6 +49,9 @@ void insercao(int item, float peso, float valor, celula **solucao);
 
 // remove um item da lista
 void remocao(celula **candidatos, int item);
+
+// remove todos os itens da lista
+void apaga_lista(celula **lista);
 
 void imprimir(celula *lista);
 

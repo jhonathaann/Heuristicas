@@ -14,9 +14,9 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
     cria_lista_candidatos(itens, &candidatos, capacidade_mochila);
 
     int capacidade_atual = capacidade_mochila,  maximo, minimo;
-
+    printf("%d\n", capacidade_atual);
     
-
+    // enquanto a mochila ainda estiver com capacidade E a lista de candidatos NAO estiver vazia
     while(capacidade_atual > 0.0 && candidatos != NULL){
         maximo = max(candidatos);   // pegando o valor maximo da lista de candidatos
         minimo =  min(candidatos);  // pegando o valor minimo da lista de candidatos
@@ -27,7 +27,7 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
         // criando a RCL
         cria_RCL(&RCL, &candidatos, maximo, minimo, alpha);
 
-        imprimir(RCL);
+        //imprimir(RCL);
 
        // printf("teste2\n");
 
@@ -38,9 +38,10 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
 
         // coloco na solucao o item escolhido aleatoriamente na RCL
         insercao(aux->item, aux->peso, aux->valor, *&solucao);  
+        printf("CAPACIDADE ATUAL: %d\n", capacidade_atual);
         capacidade_atual -= aux->peso;
 
-       // printf("teste4\n");
+        //printf("teste4\n");
 
         // atualizando a lista de candidatos
 
@@ -212,6 +213,16 @@ void remocao(celula **candidatos, int item){
     }
 }
 
+void apaga_lista(celula **lista){
+
+    while(*lista != NULL){
+        remocao(*&lista, (*lista)->item);
+
+        // *&lista = lista
+        // o operador & seguido de * (ou o contrario) eh a mesma coisa que nao colocar nada SUS
+    }
+}
+
 int quantidadeItens(celula *inicio) {
     int contador = 0;
     celula *atual = inicio;
@@ -225,9 +236,13 @@ int quantidadeItens(celula *inicio) {
 }
 
 void imprimir(celula *lista){
-    
+    if(lista == NULL){
+        printf("lista vazia\n");
+    }
     while(lista != NULL){
         printf("Item: %d, Valor: %d, Peso: %d\n", lista->item, lista->valor, lista->peso);
         lista = lista->proximo;
     }
+
+    printf("fim\n");
 }

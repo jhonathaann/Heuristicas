@@ -1,0 +1,3 @@
+capacidade da mochila
+quantidade de itens
+valor do item i; peso do item i; 1° parceiro de bonus; bonus com o 1° parceiro; 2° parceiro de bonus; bonus com 2° parceiro; .....
