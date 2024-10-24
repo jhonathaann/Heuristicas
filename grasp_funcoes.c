@@ -128,8 +128,8 @@ celula* escolha_aleatoria(celula *RCL){
     return RCL;
 }
 
-float valor_solucao(celula *solucao){
-    float valor = 0.0;
+int calcula_solucao(celula *solucao){
+    int valor = 0;
 
     while(solucao != NULL){
         valor += solucao->valor;

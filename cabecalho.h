@@ -23,6 +23,9 @@ void cria_RCL(celula **RCL, celula **candidatos, int maximo, int minimo, float a
 // atualiza a lista de candidatos
 void atualiza_candidatos(celula **candidatos, int capacidade_atual);
 
+// calcula o valor da solucao (sem considerar os bonus)
+int calcula_solucao(celula *solucao);
+
 // escolhe aleatoriamente um item da RCL
 celula* escolha_aleatoria(celula *RCL);
 

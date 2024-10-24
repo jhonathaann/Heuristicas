@@ -27,6 +27,17 @@ int main(){
         insercao(i+1, peso, valor, &itens);
     }
 
+    // cada item x pode formar par com no maximo outros n-1 itens (considerando que temos ao todo n itens)
+    // ent, para cada item, eh necessario alocar dois vetores, um para guardar todos os itens que forma bonus com o item x
+    // e outro vetor que ira guardar
+    for(int i = 0; i < quant_item; i++){
+        itens[i].itens_bonus = (int *) malloc(quant_item-1 * sizeof(int));
+        itens[i].bonus = (int *) malloc(quant_item-1 * sizeof(int));
+
+        if(itens[i].itens_bonus == NULL || itens[i].bonus == NULL){
+            printf("Erro na alocacao dos vetores de bonus do item %d\n", i+1);
+        }
+    }
     // alocando o vetor
     printf("lista de todos os itens na main:\n");
     imprimir(itens);
@@ -44,6 +55,7 @@ int main(){
 
     //imprimir(itens);
    imprimir(solucao);
+   printf("Valor da solucao: %d\n", calcula_solucao(solucao));
 
     fclose(pt_arq);
 
