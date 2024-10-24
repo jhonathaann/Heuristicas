@@ -4,15 +4,12 @@
 // struct para representar um item
 typedef struct cel{
     int item, peso, valor;
-    //float peso, valor;
+    int *itens_bonus;  // vetor para armazenar todos os itens que um item x faz bonus
+    int *bonus;        // vetor para armazenar todos os bonus
     struct cel *proximo;
 }celula;
 
-// struct para representar um par de itens
-typedef struct x{
-    int *item1;  // aloca esse vetor
-    int bonus;
-}par_itens;
+
 
 // fase de contrucao da solucao
 void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidade_mochila, float alpha);

@@ -11,7 +11,12 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
     
     // criando a lista de todos os candidatos possiveis (aqueles que cabem na mochila)
     celula *candidatos = NULL;
+
+    printf("lista de todos os itens:\n");
+    imprimir(itens);
     cria_lista_candidatos(itens, &candidatos, capacidade_mochila);
+    printf("lista de candidatos\n");
+    imprimir(candidatos);
 
     int capacidade_atual = capacidade_mochila,  maximo, minimo;
     printf("%d\n", capacidade_atual);
@@ -22,7 +27,7 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
         minimo =  min(candidatos);  // pegando o valor minimo da lista de candidatos
         //printf("teste1\n");
 
-        //printf("maximo: %d; minimo: %d\n", maximo, minimo);
+        printf("maximo: %d; minimo: %d\n", maximo, minimo);
         
         // criando a RCL
         cria_RCL(&RCL, &candidatos, maximo, minimo, alpha);
@@ -52,6 +57,8 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
 
         //2°: removo da lista de candidatos todos os itens que tem peso > que a capacidade atual da mochila
         atualiza_candidatos(&candidatos, capacidade_atual);
+
+        apaga_lista(&RCL);
 
        // printf("teste5\n");
 
@@ -220,6 +227,7 @@ void apaga_lista(celula **lista){
 
         // *&lista = lista
         // o operador & seguido de * (ou o contrario) eh a mesma coisa que nao colocar nada SUS
+        //(*lista) = (*lista)->proximo;
     }
 }
 
