@@ -4,8 +4,7 @@
 // struct para representar um item
 typedef struct cel{
     int item, peso, valor;
-    int *itens_bonus;  // vetor para armazenar todos os itens que um item x faz bonus
-    int *bonus;        // vetor para armazenar todos os bonus
+    int **bonus_ij;  // bonus_ij contem o bonus do item i com o item j
     struct cel *proximo;
 }celula;
 
