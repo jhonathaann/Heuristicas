@@ -55,6 +55,8 @@ void remocao(celula **candidatos, int item);
 // remove todos os itens da lista
 void apaga_lista(celula **lista);
 
-void imprimir(celula *lista, int n);
+void imprimir_itens(celula *lista, int n);
+
+void imprimir_solucao(celula *solucao);
 
 #endif

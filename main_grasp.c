@@ -11,7 +11,7 @@ int main(){
     FILE *peso_itens = fopen("peso_itens.txt", "r");
 
     char referencia_instancia[20];
-    int max_iteracoes = 0;
+    int max_iteracoes = 1;
     int capacidade, quant_item, valor, peso;
 
     if(pt_arq == NULL || valores_itens == NULL || peso_itens == NULL){
@@ -65,13 +65,13 @@ int main(){
         //printf("\n");
     }
 
-    printf("lista de todos os itens na main:\n");
-    imprimir(itens, quant_item);
+    //printf("lista de todos os itens na main:\n");
+    //imprimir_itens(itens, quant_item);
 
 
 
     for(int i = 0; i < max_iteracoes; i++){
-        contrucao_gulosa_randomizada(itens, &solucao, capacidade, 0.5);
+        contrucao_gulosa_randomizada(itens, &solucao, capacidade, 1);
 
         // busca local que 
 
@@ -83,9 +83,9 @@ int main(){
     }
 
     //imprimir(itens);
-   // printf("Solucao:\n");
-    //imprimir(solucao);
-    //printf("Valor da solucao: %d\n", calcula_solucao(solucao));
+    printf("Solucao:\n");
+    imprimir_solucao(solucao);
+    printf("Valor da solucao: %d\n", calcula_solucao(solucao));
 
     fclose(pt_arq);
     fclose(valores_itens);

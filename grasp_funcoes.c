@@ -12,10 +12,10 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
     // criando a lista de todos os candidatos possiveis (aqueles que cabem na mochila)
     celula *candidatos = NULL;
 
-    printf("lista de todos os itens:\n");
+    //printf("lista de todos os itens:\n");
     //imprimir(itens);
     cria_lista_candidatos(itens, &candidatos, capacidade_mochila);
-    printf("lista de candidatos\n");
+   // printf("lista de candidatos\n");
     //imprimir(candidatos);
 
     int capacidade_atual = capacidade_mochila,  maximo, minimo;
@@ -27,7 +27,7 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
         minimo =  min(candidatos);  // pegando o valor minimo da lista de candidatos
         //printf("teste1\n");
 
-        printf("maximo: %d; minimo: %d\n", maximo, minimo);
+        //printf("maximo: %d; minimo: %d\n", maximo, minimo);
         
         // criando a RCL
         cria_RCL(&RCL, &candidatos, maximo, minimo, alpha);
@@ -43,7 +43,7 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
 
         // coloco na solucao o item escolhido aleatoriamente na RCL
         insercao(aux->item, aux->peso, aux->valor, *&solucao);  
-        printf("CAPACIDADE ATUAL: %d\n", capacidade_atual);
+       // printf("CAPACIDADE ATUAL: %d\n", capacidade_atual);
         capacidade_atual -= aux->peso;
 
         //printf("teste4\n");
@@ -251,7 +251,7 @@ int quantidadeItens(celula *inicio) {
     return contador;
 }
 
-void imprimir(celula *lista, int n){
+void imprimir_itens(celula *lista, int n){
     celula *aux = lista;
     int i = 0;
 
@@ -273,4 +273,16 @@ void imprimir(celula *lista, int n){
 
 
     printf("fim\n");
+}
+
+void imprimir_solucao(celula *solucao){
+    
+    if(solucao == NULL){
+        printf("lista vazia\n");
+    }
+
+    while(solucao != NULL){
+        printf("Item: %d, Valor: %d, Peso: %d\n", solucao->item, solucao->valor, solucao->peso);
+        solucao = solucao->proximo;
+    }
 }
