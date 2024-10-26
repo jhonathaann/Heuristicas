@@ -3,31 +3,31 @@
 
 
 int main(){
-    celula *itens = NULL;  // lista que ira armazenar todos os itens de entrada
+
+    celula *itens = NULL;  // lista que ira armazenar todos os itens de entrada 
     celula *solucao = NULL;  // lista que vai conter todos os itens que fazem parte da solucao 
     FILE *pt_arq = fopen("r_100_25_1.txt", "r");
     FILE *valores_itens = fopen("valores_itens.txt", "r");
     FILE *peso_itens = fopen("peso_itens.txt", "r");
+
+    char referencia_instancia[20];
+    int max_iteracoes = 0;
+    int capacidade, quant_item, valor, peso;
 
     if(pt_arq == NULL || valores_itens == NULL || peso_itens == NULL){
         printf("Erro ao abrir um dos (ou mais) arquivos de entrada!\n");
         return 1;
     }
 
-    char referencia_instancia[20];
-    int max_iteracoes = 0;
-    int capacidade, quant_item, valor, peso;
-
     // lendo a referencia da instacnia
     fscanf(pt_arq, "%s", referencia_instancia);
     printf("Arquivo: %s\n", referencia_instancia); 
     
     
-
-    // lendo o numero de itens
+    // lendo o numero de itens e a capacidade da mochila
     fscanf(pt_arq, "%d", &quant_item);
-    //fscanf(pt_arq, "%d", &capacidade);
-    
+    fscanf(pt_arq, "%d", &capacidade);
+    printf("quantidade de itens: %d ; capacidade da mochila: %d\n", quant_item,capacidade);
 
 
 
@@ -37,22 +37,41 @@ int main(){
 
         fscanf(valores_itens, "%d", &valor);
         fscanf(peso_itens, "%d", &peso);
-        //fscanf(pt_arq, "%d", &aux);
-       // printf("%d ", aux);
-       // printf("item %d valor: %d peso: %d\n", i+1, valor, peso);
 
+       // printf("Inserindo o item %d\n", i+1);
         insercao(i+1, peso, valor, &itens);
     }
 
     // cada item x pode formar par com no maximo outros n-1 itens (considerando que temos ao todo n itens)
-    // ent, para cada item, eh necessario alocar dois vetores, um para guardar todos os itens que forma bonus com o item x
-    // e outro vetor que ira guardar
+    // o campo da struct **bonus_ij (matriz alocada dinamicamente) ira conter o bonus do item i com o item j
    
-    // alocando o vetor
+    // alocando o vetor que ira guardar os bonus que existem com o item i
+    // todos os item tem que ter esse vetor alocado. mas o tamanho desse vetor para cada item nao sera o mesmo
+
+    // itens NAO Eh umvetor e sim uma lista encadeada. por isso nao faz sentido usar itens[i]
+    celula *aux = itens;
+    for(int i = 0; i < quant_item; i++){
+        aux->bonus_i = (int *) malloc((quant_item - i - 1) * sizeof(int));
+        //itens[i].bonus_i = (int *) malloc((quant_item - i - 1) * sizeof(int));
+
+        //printf("Item: %d\n", aux->item);
+        for(int j = 0; j < quant_item - i - 1; j++){
+            fscanf(pt_arq, "%d", &aux->bonus_i[j]);
+            //printf("%d ", aux->bonus_i[j]);
+            //fscanf(pt_arq, "%d", &itens[i].bonus_i[j]);
+            //printf("%d ", itens[i].bonus_i[j]);
+        }
+        aux = aux->proximo;
+        //printf("\n");
+    }
+
     printf("lista de todos os itens na main:\n");
-    imprimir(itens);
+    imprimir(itens, quant_item);
+
+
+
     for(int i = 0; i < max_iteracoes; i++){
-        contrucao_gulosa_randomizada(itens, &solucao, capacidade, 1);
+        contrucao_gulosa_randomizada(itens, &solucao, capacidade, 0.5);
 
         // busca local que 
 
@@ -64,10 +83,13 @@ int main(){
     }
 
     //imprimir(itens);
-   //imprimir(solucao);
-   //printf("Valor da solucao: %d\n", calcula_solucao(solucao));
+   // printf("Solucao:\n");
+    //imprimir(solucao);
+    //printf("Valor da solucao: %d\n", calcula_solucao(solucao));
 
     fclose(pt_arq);
+    fclose(valores_itens);
+    fclose(peso_itens);
 
     return 0;
 

@@ -13,10 +13,10 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
     celula *candidatos = NULL;
 
     printf("lista de todos os itens:\n");
-    imprimir(itens);
+    //imprimir(itens);
     cria_lista_candidatos(itens, &candidatos, capacidade_mochila);
     printf("lista de candidatos\n");
-    imprimir(candidatos);
+    //imprimir(candidatos);
 
     int capacidade_atual = capacidade_mochila,  maximo, minimo;
     printf("%d\n", capacidade_atual);
@@ -68,7 +68,7 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
 }
 
 // lista de candidatos deve conter todos os itens que tem peso <= capacidade atual da mochila
-void cria_lista_candidatos(celula *itens, celula **candidatos,  int capacidade){
+void cria_lista_candidatos(celula *itens, celula **candidatos, int capacidade){
 
     while(itens != NULL){
         if(itens->peso <= capacidade){
@@ -172,11 +172,11 @@ int min(celula *lista){
     return minimo;
 }
 
-
-void insercao(int item, float peso, float valor, celula **solucao){
+// insercao no final
+void insercao(int item, int peso, int valor, celula **solucao){
 
     celula *nova = (celula *) malloc(sizeof(celula));  // criando a nova celula
-
+    celula *aux;
     if(nova ==  NULL){
         printf("Erro ao alocar memoria na funcao insercao!!\n");
         return;
@@ -185,11 +185,19 @@ void insercao(int item, float peso, float valor, celula **solucao){
     nova->item = item;
     nova->peso = peso;
     nova->valor = valor;
+    nova->proximo = NULL;
 
-    // faz a nova celula apontar para o topo da lista anterior
-    nova->proximo = *solucao;
+    if(*solucao == NULL){
+        *solucao = nova;
+    }else{
+        aux = *solucao;
 
-    *solucao = nova;  // atualiza o topo da lista anterior
+        while(aux->proximo != NULL){
+            aux = aux->proximo;
+        }
+
+        aux->proximo = nova;
+    }
 
 }
 
@@ -243,14 +251,26 @@ int quantidadeItens(celula *inicio) {
     return contador;
 }
 
-void imprimir(celula *lista){
+void imprimir(celula *lista, int n){
+    celula *aux = lista;
+    int i = 0;
+
     if(lista == NULL){
         printf("lista vazia\n");
     }
     while(lista != NULL){
         printf("Item: %d, Valor: %d, Peso: %d\n", lista->item, lista->valor, lista->peso);
+
+        for(int j = 0; j < n - i - 1; j++){
+            printf("%d ", aux->bonus_i[j]);
+
+        }
         lista = lista->proximo;
+        i++;
+        printf("\n");
     }
+
+
 
     printf("fim\n");
 }

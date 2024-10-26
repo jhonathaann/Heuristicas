@@ -1,3 +1,16 @@
-capacidade da mochila
+no arquivo original temos:
+nome da instancia
 quantidade de itens
-valor do item i; peso do item i; 1° parceiro de bonus; bonus com o 1° parceiro; 2° parceiro de bonus; bonus com 2° parceiro; .....
+valores do itens
+bonus
+tipo de restricao
+capacidade da mochila
+peso dos itens
+comentarios
+densidade
+
+====================================================================================
+tem que criar dois outros arquivos .txt. o primeiro dele sera para guardar os valores (linha 3 do arquivo original)
+o outro eh para guardar os pesos dos itens (linha 8 do deste aquivo .txt). no arquivo .txt original, tem que ser removido
+as linhas que contem os valores e os pesos dos itens. alem disso, eh necessario colocar o valor que representa a capacidade
+da mochila logo apos o valor que representa a quantidade de itens.

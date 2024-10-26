@@ -19,26 +19,27 @@ int main() {
         return 1;
     }
     
-    // Abrir o arquivo de entrada
     FILE *file = fopen("r_100_25_1.txt", "r");
     if (file == NULL) {
         printf("Erro ao abrir o arquivo.\n");
         return 1;
     }
 
-    // Ler referência da instância
+    // lendo o nome do arquivo
     fscanf(file, "%s", instance_ref);
     printf("intancia: %s\n", instance_ref);
 
-    // Ler o número de variáveis
+    // lendo a quantidade de itens e a capacidade da mochila
     fscanf(file, "%d", &n);
     printf("quantidade de itens: %d\n", n);
+    fscanf(file, "%d", &capacidade);
+    printf("capacidade da mochila: %d\n", capacidade);
 
-    // Alocar memória para coeficientes lineares e pesos
+    // alocando memoria para o vetor dos valores do itens e dos peso dos itens
     c = (int *)malloc(n * sizeof(int));
     peso = (int *)malloc(n * sizeof(int));
 
-    // lendo os coeficientes lineares
+    // lendo os valores dos itens
     printf("coeficientes lineares: ");
     for (int i = 0; i < n; i++) {
         fscanf(valores_itens, "%d", &c[i]);
@@ -46,14 +47,14 @@ int main() {
     }
     printf("\n");
 
-    // Alocando memoria para a matriz do bonus (matriz triangular)
+    // alocando a matriz de bonus (matriz triangular)
     c_ij = (int **)malloc((n-1) * sizeof(int *));
     for (int i = 0; i < n-1; i++) {
         c_ij[i] = (int *)malloc((n - i - 1) * sizeof(int)); 
     }
 
     // lendo os bonus
-    printf("coeficientes quadraticos:\n");
+    printf("coeficientes quadraticos (bonus_ij):\n");
     for (int i = 0; i < n - 1; i++) {
         for (int j = i + 1; j < n; j++) {
             fscanf(file, "%d", &c_ij[i][j - i - 1]);
@@ -63,15 +64,13 @@ int main() {
         printf("teste1\n");
     }
 
-    // Ler tipo de restrição (sempre <=, então é 0)
+    // lendo o tipo de restricao
     fscanf(file, "%d", &tipo_restricao);
     printf("tipo de restricao: %d (<=)\n", tipo_restricao);
 
-    // Ler a capacidade da mochila
-    fscanf(file, "%d", &capacidade);
-    printf("capacidade da mochila: %d\n", capacidade);
 
-    // Ler os pesos dos itens
+
+    // lendo os pesos dos itens
     printf("pesos dos itens: ");
     for (int i = 0; i < n; i++) {
         fscanf(peso_itens, "%d", &peso[i]);
@@ -79,10 +78,8 @@ int main() {
     }
     printf("\n");
 
-    // Fechar o arquivo
     fclose(file);
 
-    // Liberar memória
     free(c);
     free(peso);
     for (int i = 0; i < n-1; i++) {
