@@ -19,7 +19,7 @@ void contrucao_gulosa_randomizada(celula *itens, celula **solucao, int capacidad
     //imprimir(candidatos);
 
     int capacidade_atual = capacidade_mochila,  maximo, minimo;
-    printf("%d\n", capacidade_atual);
+    //printf("%d\n", capacidade_atual);
     
     // enquanto a mochila ainda estiver com capacidade E a lista de candidatos NAO estiver vazia
     while(capacidade_atual > 0.0 && candidatos != NULL){
@@ -139,6 +139,49 @@ int calcula_solucao(celula *solucao){
     return valor;
 }
 
+// a lista da solucao <= a lista dos itens
+int calcula_bonus(celula *solucao, int n){
+    int valor = 0;
+    int tam;
+
+    while(solucao != NULL){
+
+        // tamanho do vetor de bonus do item em atual
+        tam = n - solucao->item; 
+        printf("item: %d\n", solucao->item);
+        // percorrendo o vetor de bonus do item atual
+        for(int j = 0; j < tam; j++){
+            printf("teste2\n");
+            printf("%d ", solucao->valor);
+           
+            if(busca(solucao, solucao->item+1) == 1){
+                printf("%d ", solucao->bonus_i[j]);
+                valor += solucao->bonus_i[j];
+            }
+            
+        }
+        // indo para o proximo item
+        solucao = solucao->proximo;
+    }
+
+    return valor;
+}
+
+int busca(celula *solucao, int item){
+
+    while(solucao != NULL){
+        if(solucao->item == item){
+            //printf("testebusca\n");
+            return 1;
+        }
+
+        solucao = solucao->proximo;
+    }
+
+    return 0;
+}
+
+
 int random_number(int x, int y) {
     return x + rand() % (y - x + 1);
 }
@@ -252,7 +295,6 @@ int quantidadeItens(celula *inicio) {
 }
 
 void imprimir_itens(celula *lista, int n){
-    celula *aux = lista;
     int i = 0;
 
     if(lista == NULL){
@@ -260,11 +302,12 @@ void imprimir_itens(celula *lista, int n){
     }
     while(lista != NULL){
         printf("Item: %d, Valor: %d, Peso: %d\n", lista->item, lista->valor, lista->peso);
-
+        printf("Bonus com o item %d:\n", lista->item);
         for(int j = 0; j < n - i - 1; j++){
-            printf("%d ", aux->bonus_i[j]);
+            printf("%d ", lista->bonus_i[j]);
 
         }
+        printf("\n");
         lista = lista->proximo;
         i++;
         printf("\n");

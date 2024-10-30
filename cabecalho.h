@@ -28,11 +28,13 @@ void atualiza_candidatos(celula **candidatos, int capacidade_atual);
 // calcula o valor da solucao (sem considerar os bonus)
 int calcula_solucao(celula *solucao);
 
+// calcula o valor do bonus para cada item da solucao
+int calcula_bonus(celula *solucao, int n);
+
+int busca(celula *solucao, int item);
+
 // escolhe aleatoriamente um item da RCL
 celula* escolha_aleatoria(celula *RCL);
-
-// calcula o valor da solucao
-float valor_solucao(celula *solucao);
 
 // gera um numero aleatorio entre x e y
 int random_number(int x, int y);
