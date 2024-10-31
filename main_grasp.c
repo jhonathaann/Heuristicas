@@ -83,12 +83,15 @@ int main(){
     }
 
     printf("Itens:\n");
-    //imprimir_itens(itens, quant_item);
-    //printf("===========================================================================\n");
+    imprimir_itens(itens, quant_item);
+    printf("===========================================================================\n");
     printf("Solucao:\n");
     imprimir_solucao(solucao);
-    printf("Valor da solucao: %d\n", calcula_solucao(solucao));
-    printf("Valor dos bonus presente na solucao: %d\n", calcula_bonus(solucao, quant_item));
+    int aux1 = calcula_bonus(itens, solucao, quant_item);
+    int aux2 = calcula_solucao(solucao);
+    printf("Valor dos bonus presente na solucao: %d\n",aux1);
+    printf("Valor da solucao (SEM BONUS): %d\n", aux2);
+    printf("Valor FINAL da solucao: %d\n", aux1 + aux2);
 
 
     fclose(pt_arq);

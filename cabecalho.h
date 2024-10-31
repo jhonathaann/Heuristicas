@@ -29,7 +29,7 @@ void atualiza_candidatos(celula **candidatos, int capacidade_atual);
 int calcula_solucao(celula *solucao);
 
 // calcula o valor do bonus para cada item da solucao
-int calcula_bonus(celula *solucao, int n);
+int calcula_bonus(celula *itens, celula *solucao, int n);
 
 int busca(celula *solucao, int item);
 

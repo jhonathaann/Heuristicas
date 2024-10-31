@@ -140,31 +140,41 @@ int calcula_solucao(celula *solucao){
 }
 
 // a lista da solucao <= a lista dos itens
-int calcula_bonus(celula *solucao, int n){
-    int valor = 0;
-    int tam;
-
+int calcula_bonus(celula *itens, celula *solucao, int n){
+    int soma = 0, tam;
+    int j = 1;
+    celula *aux;
+    
     while(solucao != NULL){
+        tam = n - solucao->item;
+        printf("ITEM: %d\n", solucao->item);
 
-        // tamanho do vetor de bonus do item em atual
-        tam = n - solucao->item; 
-        printf("item: %d\n", solucao->item);
         // percorrendo o vetor de bonus do item atual
-        for(int j = 0; j < tam; j++){
-            printf("teste2\n");
-            printf("%d ", solucao->valor);
-           
-            if(busca(solucao, solucao->item+1) == 1){
-                printf("%d ", solucao->bonus_i[j]);
-                valor += solucao->bonus_i[j];
+        for(int i = 0; i < tam; i++){
+            //printf("% ", solucao->bonus_i[i]);
+            if(busca(solucao, solucao->item+j) == 1){
+
+                // percorrendo na lista de itens, ate eu achar a celula que contem o item atual
+                aux = itens;
+
+                while(aux != NULL && aux->item != solucao->item){
+                    aux = aux->proximo;
+                }
+
+                if(aux != NULL){
+                    printf("Bonus do item %d com o item %d: %d\n", solucao->item, solucao->item+j, aux->bonus_i[i]);
+                    soma += aux->bonus_i[i];
+                }
+                printf("\n");
             }
-            
+            j++;
         }
-        // indo para o proximo item
+        j = 1;
+
         solucao = solucao->proximo;
     }
 
-    return valor;
+    return soma;
 }
 
 int busca(celula *solucao, int item){
