@@ -115,7 +115,7 @@ void atualiza_candidatos(celula **candidatos, int capacidade_atual){
 
 // escolhe um item aleatorio da RCL e retorna a celula em que ele se encontra
 celula* escolha_aleatoria(celula *RCL){
-    srand(time(NULL));
+    
 
     int random = random_number(1, quantidadeItens(RCL));
 

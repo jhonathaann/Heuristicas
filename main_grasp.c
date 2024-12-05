@@ -13,6 +13,7 @@ int main(){
     char referencia_instancia[20];
     int max_iteracoes = 1;
     int capacidade, quant_item, valor, peso;
+    srand(0);  // inicializando a semente
 
     if(pt_arq == NULL || valores_itens == NULL || peso_itens == NULL){
         printf("Erro ao abrir um dos (ou mais) arquivos de entrada!\n");
@@ -71,15 +72,14 @@ int main(){
 
 
     for(int i = 0; i < max_iteracoes; i++){
-        contrucao_gulosa_randomizada(itens, &solucao, capacidade, 0.8);
+        apaga_lista(&solucao);
+        contrucao_gulosa_randomizada(itens, &solucao, capacidade, 1);
 
-        // busca local que 
-
-        // 
+        // busca local
 
         // antes desse laço rodar mais uma vez eu preciso "zerar" a lista "solucao"
 
-        //apaga_lista(&solucao);
+        
     }
 
     printf("Itens:\n");
