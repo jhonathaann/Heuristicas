@@ -109,7 +109,7 @@ int main()
       {
 
          // maximo e o minimo de candidatos[i];
-         min_max(candidatos, n, &maximo, &minimo);
+         min_max(candidatos, n_cand, &maximo, &minimo);
          printf("maximo: %d, minimo: %d\n", maximo, minimo);
 
          // cria a RCL
@@ -168,9 +168,11 @@ void min_max(itemType *candidatos, int n, int *max, int *min)
 
       if (candidatos[i].value <= *min)
       {
+         
          *min = candidatos[i].value;
       }
    }
+   printf("TESTECU MAXIMO E MINIMO: %d, %d\n", *max, *min);
 }
 
 void cria_RCL(itemType *candidatos, itemType *RCL, int minimo, int maximo, int alpha, int n, int *n_RCL)
@@ -181,12 +183,12 @@ void cria_RCL(itemType *candidatos, itemType *RCL, int minimo, int maximo, int a
       //printf("teste1\n");
       if (candidatos[i].value >= minimo + alpha * (maximo - minimo))
       {
-        // printf("teste2\n");
+        printf("teste 2 RCL. %d\n", *n_RCL);
          RCL[*n_RCL].label = candidatos[*n_RCL].label;
          RCL[*n_RCL].weight = candidatos[*n_RCL].weight;
          RCL[*n_RCL].value = candidatos[*n_RCL].value;
          (*n_RCL) += 1;
-         //printf("teste3\n");
+         printf("teste 3 RCL. %d\n", *n_RCL);
       }
    }
 }
