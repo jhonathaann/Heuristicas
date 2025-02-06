@@ -27,7 +27,7 @@ int main()
    itemType *candidatos, *RCL;
    itemType *item;
    int n, m;   // n = quant itens. m = quant mochilas
-   int max_iteracoes, maximo, minimo, alpha = 0.7, n_cand = 0;
+   int max_iteracoes, maximo, minimo, alpha = 0.3, n_cand = 0;
    int posicao_item_escolhido, n_RCL = 0, custo = 0;
    int *C;
    int rotulo;
@@ -80,6 +80,12 @@ int main()
    max_iteracoes = m;  // quant de iteracoes sera no momento a quantidade de mochilas da instancia
    for (int i = 0; i < max_iteracoes; i++)
    {
+      printf("\nMOCHILA %d\n", i+1);
+      printf("SOLUCAO ATE O MOMENTO:\n");
+      for(int i = 0; i < n_solucao; i++){
+         printf("%d ", itens_solucao[i]);
+      }
+      printf("\n");
       // alocando o vetor de candidatos
       candidatos = (itemType *)malloc(sizeof(itemType) * n);
 
@@ -112,15 +118,19 @@ int main()
          min_max(candidatos, n_cand, &maximo, &minimo);
          printf("maximo: %d, minimo: %d\n", maximo, minimo);
 
+         printf("LSIAT DE CANDIDATOS ANTES DE EU CRIAR A RCL:\n");
+         for(int i = 0; i < n_cand; i++){
+            printf("%d %d %d\n", candidatos[i].label,candidatos[i].weight ,candidatos[i].value);
+         }
          // cria a RCL
          RCL = (itemType *)malloc(sizeof(itemType) * n);
-         if (RCL)
-         {
-            cria_RCL(candidatos, RCL, minimo, maximo, alpha, n, &n_RCL);
-         }
-         else
-         {
-            break;
+         n_RCL = 0;  // tamanho da RCL tem que ser 0
+         cria_RCL(candidatos, RCL, minimo, maximo, alpha, n_cand, &n_RCL);
+        
+
+         printf("RCL: (tamanho = %d)\n", n_RCL);
+         for(int i = 0; i < n_RCL; i++){
+            printf("%d %d %d\n", RCL[i].label,RCL[i].weight ,RCL[i].value);
          }
 
          // escolhe um item aleatorio da RCL
@@ -142,8 +152,9 @@ int main()
 
          // apagando a RCL
          free(RCL);
+   
 
-         printf("custo: %d\n", custo);
+        // printf("custo: %d\n", custo);
       }
 
       free(candidatos);
@@ -157,7 +168,7 @@ void min_max(itemType *candidatos, int n, int *max, int *min)
 {
    *max = candidatos[0].value;
    *min = candidatos[0].value;
-   printf("TESTE MAXIMO E MINIMO: %d, %d\n", *max, *min);
+   //printf("TESTE MAXIMO E MINIMO: %d, %d\n", *max, *min);
 
    for (int i = 1; i < n; i++)
    {
@@ -172,7 +183,7 @@ void min_max(itemType *candidatos, int n, int *max, int *min)
          *min = candidatos[i].value;
       }
    }
-   printf("TESTECU MAXIMO E MINIMO: %d, %d\n", *max, *min);
+   //printf("TESTECU MAXIMO E MINIMO: %d, %d\n", *max, *min);
 }
 
 void cria_RCL(itemType *candidatos, itemType *RCL, int minimo, int maximo, int alpha, int n, int *n_RCL)
@@ -183,12 +194,12 @@ void cria_RCL(itemType *candidatos, itemType *RCL, int minimo, int maximo, int a
       //printf("teste1\n");
       if (candidatos[i].value >= minimo + alpha * (maximo - minimo))
       {
-        printf("teste 2 RCL. %d\n", *n_RCL);
-         RCL[*n_RCL].label = candidatos[*n_RCL].label;
-         RCL[*n_RCL].weight = candidatos[*n_RCL].weight;
-         RCL[*n_RCL].value = candidatos[*n_RCL].value;
+        //printf("teste 2 RCL. %d\n", *n_RCL);
+         RCL[*n_RCL].label = candidatos[i].label;
+         RCL[*n_RCL].weight = candidatos[i].weight;
+         RCL[*n_RCL].value = candidatos[i].value;
          (*n_RCL) += 1;
-         printf("teste 3 RCL. %d\n", *n_RCL);
+         //printf("teste 3 RCL. %d\n", *n_RCL);
       }
    }
 }
@@ -215,6 +226,9 @@ void atualiza_candidatos(itemType *candidatos, int rotulo, int *n_cand, int capa
    candidatos[posicao_item_escolhido] = candidatos[--(*n_cand)]; // coloco o ultimo na posicao do item escolhido e diminuo a quant de itens*/
 
    printf("LISTA DEPOIS DA PRIMEIRA ATUALIZACAO:\n");
+   if(*n_cand == 0){
+      printf("LISTA DE CANDIDATOS VAZIA\n");
+   }
    for(int i = 0; i < *n_cand; i++){
       printf("%d %d %d\n", candidatos[i].label,candidatos[i].weight ,candidatos[i].value);
    }
@@ -241,6 +255,9 @@ void atualiza_candidatos(itemType *candidatos, int rotulo, int *n_cand, int capa
    }
 
    printf("LISTA DEPOIS DA ULTIMA ATUALIZACAO:\n");
+   if(*n_cand == 0){
+      printf("LISTA DE CANDIDATOS VAZIA\n");
+   }
    for(int i = 0; i < *n_cand; i++){
       printf("%d %d %d\n", candidatos[i].label,candidatos[i].weight ,candidatos[i].value);
    }
@@ -255,11 +272,11 @@ int verifica_solucao(int *solucao, int label, int n){
       for(int i = 0; i < n; i++){
          if(solucao[i] == label){
             // esse item ja esta na solucao
-            return 0;
+            return 1;
          }
       }
    }
 
-   return 1;  // esse item nao foi colacado em nenhuma outra mochila
+   return 0;  // esse item nao foi colacado em nenhuma outra mochila
 
 }
