@@ -11,6 +11,12 @@ typedef struct
    int weight; // peso do item
 } itemType;
 
+// struct para guardar uma solucao
+typedef struct
+{
+   int label, mochila
+}solucao;
+
 void min_max(itemType *candidatos, int n, int *max, int *min);
 
 void cria_RCL(itemType *candidatos, itemType *RCL, int minimo, int maximo, int alpha, int n, int *n_RCL);
@@ -19,19 +25,20 @@ int numero_aleatorio(int n_cand);
 
 void atualiza_candidatos(itemType *candidatos, int rotulo, int *n_cand, int capacidade_atual);
 
-int verifica_solucao(int *solucao, int label, int n);
+int verifica_solucao(solucao *itens_solucao, int label, int n);
 
 int main()
 {
    srand(time(NULL));
    itemType *candidatos, *RCL;
    itemType *item;
+   solucao *itens_solucao;
    int n, m;   // n = quant itens. m = quant mochilas
-   int max_iteracoes, maximo, minimo, alpha = 0.3, n_cand = 0;
+   int max_iteracoes, maximo, minimo, alpha = 0, n_cand = 0;
    int posicao_item_escolhido, n_RCL = 0, custo = 0;
    int *C;
    int rotulo;
-   int *itens_solucao, n_solucao = 0;
+   int n_solucao = 0;
 
    FILE *arquivo = fopen("C:/Users/jhona/OneDrive/Faculdade/LEXA/IC/Grasp/texte.txt", "r");
    if (!arquivo)
@@ -75,17 +82,17 @@ int main()
 
 
    // alocando o vetor de itens que foram colocados na solucao
-   itens_solucao = (int *) malloc(sizeof(int)*n);
+   itens_solucao = (solucao *) malloc(sizeof(solucao)*n);
    
    max_iteracoes = m;  // quant de iteracoes sera no momento a quantidade de mochilas da instancia
    for (int i = 0; i < max_iteracoes; i++)
    {
       printf("\nMOCHILA %d\n", i+1);
-      printf("SOLUCAO ATE O MOMENTO:\n");
+      /*printf("SOLUCAO ATE O MOMENTO:\n");
       for(int i = 0; i < n_solucao; i++){
          printf("%d ", itens_solucao[i]);
       }
-      printf("\n");
+      printf("\n");*/
       // alocando o vetor de candidatos
       candidatos = (itemType *)malloc(sizeof(itemType) * n);
 
@@ -99,8 +106,8 @@ int main()
             n_cand++;
          }
       }
-      printf("TAMANHO DO VETOR CANDIDATOS: %d\n", n_cand);
-      printf("LISTA DE CANDIDATOS:\n");
+      /*printf("TAMANHO DO VETOR CANDIDATOS: %d\n", n_cand);
+      printf("LISTA DE CANDIDATOS:\n");*/
      
       for(int i = 0; i < n_cand; i++){
          printf("%d %d %d\n", candidatos[i].label,candidatos[i].weight ,candidatos[i].value);
@@ -109,7 +116,7 @@ int main()
 
       int capacidade_atual = C[i];
 
-      printf("CAPACIDADE DA MOCHILA %d: %d\n", i+1, capacidade_atual);
+      //printf("CAPACIDADE DA MOCHILA %d: %d\n", i+1, capacidade_atual);
 
       while (capacidade_atual > 0.0 && n_cand >= 1)
       {
@@ -137,17 +144,22 @@ int main()
          posicao_item_escolhido = numero_aleatorio(n_RCL);
          rotulo = RCL[posicao_item_escolhido].label;  // pegando o rotulo do item escolhido para conseguir remover ele no candidatos
 
-         printf("ITEM ESCOLHIDO DA RCL: %d\n", RCL[posicao_item_escolhido].label);
+         //printf("ITEM ESCOLHIDO DA RCL: %d\n", RCL[posicao_item_escolhido].label);
 
          // atualzia o custo e diminui a capacidade atual da mochila
          custo += RCL[posicao_item_escolhido].value;
-         printf("PESO DO ITEM ESCOLHIDO: %d\n", RCL[posicao_item_escolhido].weight);
+        // printf("PESO DO ITEM ESCOLHIDO: %d\n", RCL[posicao_item_escolhido].weight);
          capacidade_atual -= RCL[posicao_item_escolhido].weight;
-         itens_solucao[n_solucao] = RCL[posicao_item_escolhido].label;
+         itens_solucao[n_solucao].label = RCL[posicao_item_escolhido].label;
+         itens_solucao[n_solucao].mochila = i+1;
+         /*itens_solucao[n_solucao].label = RCL[posicao_item_escolhido].label;
+         itens_solucao[n_solucao].weight = RCL[posicao_item_escolhido].weight;
+         itens_solucao[n_solucao].value = RCL[posicao_item_escolhido].value;*/
          n_solucao++;
+         printf("MOCHILA %d\n", i+1);
 
          // atualizar a lista de candidatos
-         printf("CAPACIDADE ATUAL DA MOCHILA %d: %d\n", i+1, capacidade_atual);
+        // printf("CAPACIDADE ATUAL DA MOCHILA %d: %d\n", i+1, capacidade_atual);
          atualiza_candidatos(candidatos, rotulo, &n_cand, capacidade_atual);
 
          // apagando a RCL
@@ -160,7 +172,12 @@ int main()
       free(candidatos);
    }
 
-   printf("custo: %d\n", custo);
+   printf("SOLUCAO FINAL:\n");
+   for(int i = 0; i < n_solucao; i++){
+         printf("ITEM: %d; MOCHILA: %d\n", itens_solucao[i].label, itens_solucao[i].mochila);
+      }
+
+   printf("\ncusto: %d\n", custo);
    return 0;
 }
 
@@ -211,10 +228,10 @@ int numero_aleatorio(int n_cand)
 
 void atualiza_candidatos(itemType *candidatos, int rotulo, int *n_cand, int capacidade_atual)
 {
-   printf("LISTA DE CANDIDATOS ANTES DA ATUALIZACAO:\n");
+   /*printf("LISTA DE CANDIDATOS ANTES DA ATUALIZACAO:\n");
    for(int i = 0; i < *n_cand; i++){
       printf("%d %d %d\n", candidatos[i].label,candidatos[i].weight ,candidatos[i].value);
-   }
+   }*/
 
    // 1° "remover" o item que foi escolhido
    for(int i = 0; i < *n_cand; i++){
@@ -225,13 +242,13 @@ void atualiza_candidatos(itemType *candidatos, int rotulo, int *n_cand, int capa
    /* 1° "remover" o item que foi escolhido
    candidatos[posicao_item_escolhido] = candidatos[--(*n_cand)]; // coloco o ultimo na posicao do item escolhido e diminuo a quant de itens*/
 
-   printf("LISTA DEPOIS DA PRIMEIRA ATUALIZACAO:\n");
+   /*printf("LISTA DEPOIS DA PRIMEIRA ATUALIZACAO:\n");
    if(*n_cand == 0){
       printf("LISTA DE CANDIDATOS VAZIA\n");
    }
    for(int i = 0; i < *n_cand; i++){
       printf("%d %d %d\n", candidatos[i].label,candidatos[i].weight ,candidatos[i].value);
-   }
+   }*/
 
 
    // removendo da lista todos os itens que possuem peso > capacidade atual da mochila
@@ -254,23 +271,23 @@ void atualiza_candidatos(itemType *candidatos, int rotulo, int *n_cand, int capa
       }
    }
 
-   printf("LISTA DEPOIS DA ULTIMA ATUALIZACAO:\n");
+   /*printf("LISTA DEPOIS DA ULTIMA ATUALIZACAO:\n");
    if(*n_cand == 0){
       printf("LISTA DE CANDIDATOS VAZIA\n");
    }
    for(int i = 0; i < *n_cand; i++){
       printf("%d %d %d\n", candidatos[i].label,candidatos[i].weight ,candidatos[i].value);
-   }
+   }*/
 }
 
-int verifica_solucao(int *solucao, int label, int n){
+int verifica_solucao(solucao *itens_solucao, int label, int n){
 
    // solucao ainda esta vazia
    if(n == 0){
       return 0;
    }else{
       for(int i = 0; i < n; i++){
-         if(solucao[i] == label){
+         if(itens_solucao[i].label == label){
             // esse item ja esta na solucao
             return 1;
          }
