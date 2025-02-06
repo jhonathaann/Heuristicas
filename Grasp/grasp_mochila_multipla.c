@@ -14,7 +14,7 @@ typedef struct
 // struct para guardar uma solucao
 typedef struct
 {
-   int label, mochila
+   int label, mochila;
 }solucao;
 
 void min_max(itemType *candidatos, int n, int *max, int *min);
@@ -34,11 +34,9 @@ int main()
    itemType *item;
    solucao *itens_solucao;
    int n, m;   // n = quant itens. m = quant mochilas
-   int max_iteracoes, maximo, minimo, alpha = 0, n_cand = 0;
-   int posicao_item_escolhido, n_RCL = 0, custo = 0;
+   int max_iteracoes, maximo, minimo, alpha = 0.7, n_cand = 0;
+   int posicao_item_escolhido, n_RCL = 0, custo = 0, rotulo, n_solucao = 0;
    int *C;
-   int rotulo;
-   int n_solucao = 0;
 
    FILE *arquivo = fopen("C:/Users/jhona/OneDrive/Faculdade/LEXA/IC/Grasp/texte.txt", "r");
    if (!arquivo)
@@ -107,11 +105,10 @@ int main()
          }
       }
       /*printf("TAMANHO DO VETOR CANDIDATOS: %d\n", n_cand);
-      printf("LISTA DE CANDIDATOS:\n");*/
-     
+      printf("LISTA DE CANDIDATOS:\n");
       for(int i = 0; i < n_cand; i++){
          printf("%d %d %d\n", candidatos[i].label,candidatos[i].weight ,candidatos[i].value);
-      }
+      } */
 
 
       int capacidade_atual = C[i];
