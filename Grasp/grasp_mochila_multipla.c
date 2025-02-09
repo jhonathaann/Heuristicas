@@ -21,7 +21,7 @@ void min_max(itemType *candidatos, int n, int *max, int *min);
 
 void cria_RCL(itemType *candidatos, itemType *RCL, int minimo, int maximo, int alpha, int n, int *n_RCL);
 
-int numero_aleatorio(int n_cand);
+int numero_aleatorio(int n_RCL);
 
 void atualiza_candidatos(itemType *candidatos, int rotulo, int *n_cand, int capacidade_atual);
 
@@ -218,9 +218,9 @@ void cria_RCL(itemType *candidatos, itemType *RCL, int minimo, int maximo, int a
    }
 }
 
-int numero_aleatorio(int n_cand)
+int numero_aleatorio(int n_RCL)
 {
-   return rand() % n_cand;
+   return rand() % n_RCL;
 }
 
 void atualiza_candidatos(itemType *candidatos, int rotulo, int *n_cand, int capacidade_atual)

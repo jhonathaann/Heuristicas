@@ -41,6 +41,8 @@ int main(){
 }
 
 void iniciar_alocacao(Alocacao *instancia){
+    // alocando com base na quantidade de disciplinas
+    // ou seja, a posicao d do vetor instancia contem o professor que foi alocado para a disciplina d, e a sua prioridade
     for(int d = 0; d < DISCIPLINAS; d++){
         instancia[d].professor = -1;
         instancia[d].prioridade = -1;
