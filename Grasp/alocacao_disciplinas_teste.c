@@ -23,7 +23,13 @@ typedef struct{
     int professor, prioridade, carga_horaria_prof;
 }Alocacao;
 
-void min_max(int *candidatos, int n_cand, int *max, int *min);
+typedef struct
+{
+    int disciplina, prioridade;
+}Candidatos;
+
+
+void min_max(Candidatos *candidatos, int n_cand, int *max, int *min);
 
 void iniciar_alocacao(Alocacao *alocacao);
 
@@ -32,9 +38,9 @@ void iniciar_alocacao(Alocacao *alocacao);
 
 void imprimir(Alocacao *alocacao);
 
-void cria_RCL(int *RCL, int *candidatos, int maximo, int minimo, int n_cand, int *n_RCL);
+void cria_RCL(Candidatos *RCL, Candidatos *candidatos, int maximo, int minimo, int n_cand, int *n_RCL);
 
-void atualiza_candidatos(int *candidatos, int *n_cand, int escolhido); // por enquanto essa atualizacao eh so para tirar a disciplina que foi escolhida
+void atualiza_candidatos(Candidatos *candidatos, int *n_cand, int escolhido); // por enquanto essa atualizacao eh so para tirar a disciplina que foi escolhida
 
 void criando_grafo(Disciplinas *d);
 
@@ -44,8 +50,9 @@ int main(){
     srand(time(NULL));
     Alocacao alocacao[DISCIPLINAS];
     Disciplinas disc;
+    Candidatos *candidatos, *RCL;
 
-    int *candidatos, *RCL, n_cand = 0, n_RCL = 0, maximo, minimo;
+    int n_cand = 0, n_RCL = 0, maximo, minimo;
     int max_iteracoes, carga_atual, posicao_escolhida;
     //int solucao = -1;  // essa variavel ira armazenar a soma das satisfacoes dos professores
 
@@ -65,8 +72,8 @@ int main(){
     max_iteracoes = 1;
     for(int i = 0; i < max_iteracoes; i++){
 
-        // os candidatos vao ser os professores que podem ministrar aquela disciplina d
-        candidatos = (int *) malloc(sizeof(int) * DISCIPLINAS);
+        // os candidatos vao ser os as disciplinas que o professor p pode ministrar
+        candidatos = (Candidatos *) malloc(sizeof(Candidatos) * DISCIPLINAS);
 
         // pegando a carga horaria que o professor p deve cumprir
         carga_atual = alocacao[p].carga_horaria_prof;
@@ -79,27 +86,27 @@ int main(){
         for(int d = 0; d < DISCIPLINAS; d++){
             // vou fazer por enquanto so a primeira restricao
             if(disc.G[p][d] > 0){
-                //candidatos[n_cand] = disc.G[p][d];
-                candidatos[n_cand] = d;   // guardo de fato a disciplina, e nao o interesse que o professor p tem pela disciplina d
+                candidatos[n_cand].prioridade = disc.G[p][d];
+                candidatos[n_cand].disciplina = d;   // guardo de fato a disciplina, e nao o interesse que o professor p tem pela disciplina d
                 n_cand++;
-                printf("%d ", disc.G[p][d]);
+               // printf("%d ", disc.G[p][d]);
             }
         }
         printf("\ntamanho da lista de candidatos para o professor %d: %d \n", p+1, n_cand);
         printf("todos os candidatos (disciplinas) que podem ser ministradas pelo professor %d:\n", p+1);
         for(int i = 0; i < n_cand; i++){
-            printf("%d ", candidatos[i]);
+            printf("Disciplina: %d E prioridade: %d\n", candidatos[i].disciplina, candidatos[i].prioridade);
         }
 
         
-        //enquanto o professor p nao fechou a sua carga horaria E a sua lista de candidatos existe
+        //enquanto o professor p nao fechou a sua carga horaria E a sua lista de candidatos existe (ou seja, ainda tem disciplinas que ele pode ministrar)
         while(carga_atual > 0 && n_cand >= 1){
             min_max(candidatos, n_cand, &maximo, &minimo);
 
             printf("\nMAXMIMO %d E MINIMO %d\n", maximo, minimo);
 
             // criando a RCL
-            RCL = (int *) malloc(sizeof(int) * n_cand);
+            RCL = (Candidatos *) malloc(sizeof(Candidatos) * n_cand);
             n_RCL = 0;
             cria_RCL(RCL, candidatos, maximo, minimo, n_cand, &n_RCL);
 
@@ -179,65 +186,68 @@ int numero_aleatorio(int n_RCL){
     return rand() % n_RCL;
 }
 
-void min_max(int *candidatos, int n_cand, int *max, int *min) {
+void min_max(Candidatos *candidatos, int n_cand, int *max, int *min) {
     if (n_cand == 1) {
-        *max = candidatos[0];
-        *min = candidatos[0];
+        *max = candidatos[0].prioridade;
+        *min = candidatos[0].prioridade;
         return;
     }
 
-    if (candidatos[0] < candidatos[1]) {
-        *min = candidatos[0];
-        *max = candidatos[1];
+    if (candidatos[0].prioridade < candidatos[1].prioridade) {
+        *min = candidatos[0].prioridade;
+        *max = candidatos[1].prioridade;
     } else {
-        *min = candidatos[1];
-        *max = candidatos[0];
+        *min = candidatos[1].prioridade;
+        *max = candidatos[0].prioridade;
     }
 
     for (int i = 2; i < n_cand - 1; i += 2) {
-        if (candidatos[i] < candidatos[i + 1]) {
-            if (candidatos[i] < *min) {
-                *min = candidatos[i];
+        if (candidatos[i].prioridade < candidatos[i + 1].prioridade) {
+            if (candidatos[i].prioridade < *min) {
+                *min = candidatos[i].prioridade;
             }
-            if (candidatos[i + 1] > *max) {
-                *max = candidatos[i + 1];
+            if (candidatos[i + 1].prioridade > *max) {
+                *max = candidatos[i + 1].prioridade;
             }
         } else {
-            if (candidatos[i] > *max) {
-                *max = candidatos[i];
+            if (candidatos[i].prioridade > *max) {
+                *max = candidatos[i].prioridade;
             }
-            if (candidatos[i + 1] < *min) {
-                *min = candidatos[i + 1];
+            if (candidatos[i + 1].prioridade < *min) {
+                *min = candidatos[i + 1].prioridade;
             }
         }
     }
     if (n_cand % 2 != 0) {
-        if (candidatos[n_cand - 1] > *max) {
-            *max = candidatos[n_cand - 1];
+        if (candidatos[n_cand - 1].prioridade > *max) {
+            *max = candidatos[n_cand - 1].prioridade;
         }
-        if (candidatos[n_cand - 1] < *min) {
-            *min = candidatos[n_cand - 1];
+        if (candidatos[n_cand - 1].prioridade < *min) {
+            *min = candidatos[n_cand - 1].prioridade;
         }
     }
 }
 
-void cria_RCL(int *RCL, int *candidatos, int maximo, int minimo, int n_cand, int *n_RCL){
+void cria_RCL(Candidatos *RCL, Candidatos *candidatos, int maximo, int minimo, int n_cand, int *n_RCL){
     for(int i = 0; i < n_cand; i++){
-        if(candidatos[i] >= minimo + ALPHA * (maximo - minimo)){
-            RCL[*n_RCL] = candidatos[i];
+        if(candidatos[i].prioridade >= minimo + ALPHA * (maximo - minimo)){
+            RCL[*n_RCL].disciplina = candidatos[i].disciplina;
+            RCL[*n_RCL].prioridade = candidatos[i].prioridade;
             (*n_RCL) += 1;
         }
     }
 }
 
-void atualiza_candidatos(int *candidatos, int *n_cand, int escolhido){
+void atualiza_candidatos(Candidatos *candidatos, int *n_cand, int escolhido){
     printf("lista de candidatos (disciplinas) do professor atual:\n");
     for(int i = 0; i < *n_cand; i++){
-        printf("%d ", candidatos[i]);
+        printf("%d ", candidatos[i].disciplina);
     }
 
-    candidatos[escolhido] = candidatos[--(*n_cand)];  // colocando a ultima disciplina no local da disciplina que foi escolhida
+    candidatos[escolhido].disciplina = candidatos[*n_cand].disciplina;  // colocando a ultima disciplina no local da disciplina que foi escolhida
+    candidatos[escolhido].disciplina = candidatos[*n_cand].disciplina;
 
+    (*n_cand) -= 1;
 }
 
 void imprimir(Alocacao *alocacao) {

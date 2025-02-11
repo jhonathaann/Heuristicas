@@ -1,3 +1,7 @@
- for(int k = 0; i < n_cand; k++){
-         printf("%d %d %d\n", candidatos[i].label,candidatos[i].weight ,candidatos[i].value);
-      }
+void criando_grafo(Disciplinas *d){
+    int valores[PROFESSORES][DISCIPLINAS] = {
+        {10, 5, 0, 5, 4},
+        {2, 9, 8, 0, 7},
+        {0, 6, 10, 8, 5},
+        {7, 0, 5, 9, 10}
+    };
