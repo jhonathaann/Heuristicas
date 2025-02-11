@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+/* o objetivo final eh maximizar a satisfaçao dos professores? se sim, isso se da alocando cada professor
+/ para a disciplina que ele deu maior prioridade? isso pode acabar ajudando uns e outros nao, eu acho*/ 
+
 #define PROFESSORES 4
 #define DISCIPLINAS 5
 #define ALPHA 0.3    // controla a aleatoriedade
@@ -29,6 +32,10 @@ void iniciar_alocacao(Alocacao *alocacao);
 
 void imprimir(Alocacao *alocacao);
 
+void cria_RCL(int *RCL, int *candidatos, int maximo, int minimo, int n_cand, int *n_RCL);
+
+void atualiza_candidatos(int *candidatos, int *n_cand, int escolhido); // por enquanto essa atualizacao eh so para tirar a disciplina que foi escolhida
+
 void criando_grafo(Disciplinas *d);
 
 int numero_aleatorio(int n_RCL);
@@ -38,8 +45,9 @@ int main(){
     Alocacao alocacao[DISCIPLINAS];
     Disciplinas disc;
 
-    int *candidatos, n_cand = 0, n_RCL, maximo, minimo;
-    int max_iteracoes = 1, carga_atual;
+    int *candidatos, *RCL, n_cand = 0, n_RCL = 0, maximo, minimo;
+    int max_iteracoes, carga_atual, posicao_escolhida;
+    //int solucao = -1;  // essa variavel ira armazenar a soma das satisfacoes dos professores
 
     // alocando o vetor da carga horaria
     disc.carga_horaria = (int *) malloc(sizeof(int) * DISCIPLINAS);
@@ -53,10 +61,16 @@ int main(){
    
     iniciar_alocacao(alocacao);
 
-    int p = 0; // no começo, eu estou no professor 0
+    int p = 0; // no começo, eu estou no professor p
+    max_iteracoes = 1;
     for(int i = 0; i < max_iteracoes; i++){
 
+        // os candidatos vao ser os professores que podem ministrar aquela disciplina d
         candidatos = (int *) malloc(sizeof(int) * DISCIPLINAS);
+
+        // pegando a carga horaria que o professor p deve cumprir
+        carga_atual = alocacao[p].carga_horaria_prof;
+        //printf("carga horaria do professor 1: %d\n", carga_atual);
 
         // ==== CRIANDO A LISTA DE CANDIDATOS DO PROFESSOR P
         
@@ -65,30 +79,41 @@ int main(){
         for(int d = 0; d < DISCIPLINAS; d++){
             // vou fazer por enquanto so a primeira restricao
             if(disc.G[p][d] > 0){
-                candidatos[n_cand] = disc.G[p][d];
+                //candidatos[n_cand] = disc.G[p][d];
+                candidatos[n_cand] = d;   // guardo de fato a disciplina, e nao o interesse que o professor p tem pela disciplina d
                 n_cand++;
-                //printf("%d ", disc.G[p][d]);
+                printf("%d ", disc.G[p][d]);
             }
         }
-
-        printf("todos os candidatos do professor %d:\n", p+1);
+        printf("\ntamanho da lista de candidatos para o professor %d: %d \n", p+1, n_cand);
+        printf("todos os candidatos (disciplinas) que podem ser ministradas pelo professor %d:\n", p+1);
         for(int i = 0; i < n_cand; i++){
             printf("%d ", candidatos[i]);
         }
 
-        // pegando a carga horaria que o professor p deve cumprir
-        carga_atual = alocacao[i].carga_horaria_prof;
-        //printf("carga horaria do professor 1: %d\n", carga_atual);
         
-       
-
-        // enquanto o professor p nao fechou a sua carga horaria E a sua lista de candidatos existe
+        //enquanto o professor p nao fechou a sua carga horaria E a sua lista de candidatos existe
         while(carga_atual > 0 && n_cand >= 1){
             min_max(candidatos, n_cand, &maximo, &minimo);
 
-            printf("MAXMIMO %d E MINIMO %d\n", maximo, minimo);
+            printf("\nMAXMIMO %d E MINIMO %d\n", maximo, minimo);
 
-        }
+            // criando a RCL
+            RCL = (int *) malloc(sizeof(int) * n_cand);
+            n_RCL = 0;
+            cria_RCL(RCL, candidatos, maximo, minimo, n_cand, &n_RCL);
+
+            posicao_escolhida = numero_aleatorio(n_RCL);  // esse numero retornado vai ser a disciplina que vai ser alocada para o professor p
+            printf("Disciplina escolhida para o professor %d: %d\n", p+1, posicao_escolhida);
+            alocacao[posicao_escolhida].professor = p;   // colocando na disciplina d (que foi)
+           // alocacao[posicao_escolhida].prioridade = disc.G[p][d];
+
+
+
+            carga_atual -= disc.carga_horaria[posicao_escolhida];
+
+            atualiza_candidatos(candidatos, &n_cand, posicao_escolhida);
+        } 
 
 
         p++;
@@ -98,7 +123,7 @@ int main(){
 
     //fase_construtiva(alocacao);
 
-    //imprimir(alocacao);
+    imprimir(alocacao);
 }
 
 void iniciar_alocacao(Alocacao *alocacao){
@@ -131,7 +156,7 @@ void iniciar_alocacao(Alocacao *alocacao){
 
 void criando_grafo(Disciplinas *d){
     int valores[PROFESSORES][DISCIPLINAS] = {
-        {10, 5, 0, 7, 4},
+        {10, 5, 0, 5, 4},
         {2, 9, 8, 0, 7},
         {0, 6, 10, 8, 5},
         {7, 0, 5, 9, 10}
@@ -194,6 +219,25 @@ void min_max(int *candidatos, int n_cand, int *max, int *min) {
             *min = candidatos[n_cand - 1];
         }
     }
+}
+
+void cria_RCL(int *RCL, int *candidatos, int maximo, int minimo, int n_cand, int *n_RCL){
+    for(int i = 0; i < n_cand; i++){
+        if(candidatos[i] >= minimo + ALPHA * (maximo - minimo)){
+            RCL[*n_RCL] = candidatos[i];
+            (*n_RCL) += 1;
+        }
+    }
+}
+
+void atualiza_candidatos(int *candidatos, int *n_cand, int escolhido){
+    printf("lista de candidatos (disciplinas) do professor atual:\n");
+    for(int i = 0; i < *n_cand; i++){
+        printf("%d ", candidatos[i]);
+    }
+
+    candidatos[escolhido] = candidatos[--(*n_cand)];  // colocando a ultima disciplina no local da disciplina que foi escolhida
+
 }
 
 void imprimir(Alocacao *alocacao) {
