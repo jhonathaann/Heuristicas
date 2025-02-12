@@ -130,10 +130,12 @@ int main(){
 
             atualiza_candidatos(candidatos, &n_cand, RCL[posicao_escolhida].disciplina);
 
+            free(RCL);
+
 
             printf("\n====== FIM DE UMA ITERACAO!! ========\n");
         } 
-
+        free(candidatos);
 
         p++;
 
@@ -142,7 +144,7 @@ int main(){
 
     //fase_construtiva(alocacao);
 
-    //imprimir(alocacao);
+    imprimir(alocacao);
 }
 
 void iniciar_alocacao(Alocacao *alocacao){
