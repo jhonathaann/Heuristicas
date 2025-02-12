@@ -40,7 +40,7 @@ void imprimir(Alocacao *alocacao);
 
 void cria_RCL(Candidatos *RCL, Candidatos *candidatos, int maximo, int minimo, int n_cand, int *n_RCL);
 
-void atualiza_candidatos(Candidatos *candidatos, int *n_cand, int escolhido); // por enquanto essa atualizacao eh so para tirar a disciplina que foi escolhida
+void atualiza_candidatos(Candidatos *candidatos, int *n_cand, int disciplina); // por enquanto essa atualizacao eh so para tirar a disciplina que foi escolhida
 
 void criando_grafo(Disciplinas *d);
 
@@ -109,17 +109,29 @@ int main(){
             RCL = (Candidatos *) malloc(sizeof(Candidatos) * n_cand);
             n_RCL = 0;
             cria_RCL(RCL, candidatos, maximo, minimo, n_cand, &n_RCL);
+            printf("Tamanho da RCL: %d\nRCL:\n", n_RCL);
+            for(int i = 0; i < n_RCL; i++){
+                printf("Disciplina: %d E prioridade: %d\n", RCL[i].disciplina, RCL[i].prioridade);
+            }
 
-            posicao_escolhida = numero_aleatorio(n_RCL);  // esse numero retornado vai ser a disciplina que vai ser alocada para o professor p
-            printf("Disciplina escolhida para o professor %d: %d\n", p+1, posicao_escolhida);
+           posicao_escolhida = numero_aleatorio(n_RCL);  // esse numero retornado vai ser a disciplina que vai ser alocada para o professor p
+           printf("Numero escolhido pela funcao aleatoria: %d\n", posicao_escolhida);
+           alocacao[RCL[posicao_escolhida].disciplina].professor = p;  // colocando na disciplina que foi escolhida o professor p
+            //printf("numero escolhido na funcao aleatoria: %d\nDisciplina escolhida para o professor %d: %d\n",posicao_escolhida, p+1, RCL[posicao_escolhida].disciplina);
+
             alocacao[posicao_escolhida].professor = p;   // colocando na disciplina d (que foi)
            // alocacao[posicao_escolhida].prioridade = disc.G[p][d];
 
+            // printando o vetor de alocacao para ver como esta a solucao ate o momento
+            printf("disciplina alocada para o professor %d: %d\n", p+1,RCL[posicao_escolhida].disciplina);
+            printf("Carga horaria atual do professor %d: %d\n", p+1, carga_atual);
+            carga_atual -= disc.carga_horaria[RCL[posicao_escolhida].disciplina];
+            printf("Carga horaria atual do professor %d: %d\n", p+1, carga_atual);
+
+            atualiza_candidatos(candidatos, &n_cand, RCL[posicao_escolhida].disciplina);
 
 
-            carga_atual -= disc.carga_horaria[posicao_escolhida];
-
-            atualiza_candidatos(candidatos, &n_cand, posicao_escolhida);
+            printf("\n====== FIM DE UMA ITERACAO!! ========\n");
         } 
 
 
@@ -130,7 +142,7 @@ int main(){
 
     //fase_construtiva(alocacao);
 
-    imprimir(alocacao);
+    //imprimir(alocacao);
 }
 
 void iniciar_alocacao(Alocacao *alocacao){
@@ -163,10 +175,10 @@ void iniciar_alocacao(Alocacao *alocacao){
 
 void criando_grafo(Disciplinas *d){
     int valores[PROFESSORES][DISCIPLINAS] = {
-        {10, 5, 0, 5, 4},
+        {10, 5, 0, 7, 4},
         {2, 9, 8, 0, 7},
         {0, 6, 10, 8, 5},
-        {7, 0, 5, 9, 10}
+        {4, 0, 5, 9, 10}
     };
 
     // copiando os valores para a matriz dentro da struct
@@ -183,6 +195,7 @@ void criando_grafo(Disciplinas *d){
 }
 
 int numero_aleatorio(int n_RCL){
+    //srand(time(NULL));
     return rand() % n_RCL;
 }
 
@@ -238,16 +251,28 @@ void cria_RCL(Candidatos *RCL, Candidatos *candidatos, int maximo, int minimo, i
     }
 }
 
-void atualiza_candidatos(Candidatos *candidatos, int *n_cand, int escolhido){
+void atualiza_candidatos(Candidatos *candidatos, int *n_cand, int disciplina){
     printf("lista de candidatos (disciplinas) do professor atual:\n");
     for(int i = 0; i < *n_cand; i++){
         printf("%d ", candidatos[i].disciplina);
     }
 
-    candidatos[escolhido].disciplina = candidatos[*n_cand].disciplina;  // colocando a ultima disciplina no local da disciplina que foi escolhida
-    candidatos[escolhido].disciplina = candidatos[*n_cand].disciplina;
+    for(int i = 0; i < *n_cand; i++){
+        if(candidatos[i].disciplina == disciplina){
+            candidatos[i].disciplina = candidatos[*n_cand].disciplina;
+            candidatos[i].prioridade = candidatos[*n_cand].prioridade;
+            break;
+        }
+    }
+    //candidatos[escolhido].disciplina = candidatos[*n_cand].disciplina;  // colocando a ultima disciplina no local da disciplina que foi escolhida
+    //candidatos[escolhido].prioridade = candidatos[*n_cand].prioridade;
 
     (*n_cand) -= 1;
+
+    printf("\nlista de candidatos (disciplinas) do professor atual DEPOIS DA ATUALIZACAO:\n");
+    for(int i = 0; i < *n_cand; i++){
+        printf("%d ", candidatos[i].disciplina);
+    }
 }
 
 void imprimir(Alocacao *alocacao) {

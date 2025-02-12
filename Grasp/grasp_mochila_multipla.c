@@ -234,6 +234,7 @@ void atualiza_candidatos(itemType *candidatos, int rotulo, int *n_cand, int capa
    for(int i = 0; i < *n_cand; i++){
       if(candidatos[i].label == rotulo){
          candidatos[i] = candidatos[--(*n_cand)];
+         break;
       }
    }
    /* 1° "remover" o item que foi escolhido

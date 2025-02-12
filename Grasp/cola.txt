@@ -1,6 +1,6 @@
 void criando_grafo(Disciplinas *d){
     int valores[PROFESSORES][DISCIPLINAS] = {
-        {10, 5, 0, 5, 4},
+        {10, 7, 0, 5, 4},
         {2, 9, 8, 0, 7},
         {0, 6, 10, 8, 5},
         {7, 0, 5, 9, 10}
