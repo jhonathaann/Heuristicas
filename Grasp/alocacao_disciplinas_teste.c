@@ -52,7 +52,7 @@ int main(){
     Disciplinas disc;
     Candidatos *candidatos, *RCL;
 
-    int n_cand = 0, n_RCL = 0, maximo, minimo;
+    int n_cand, n_RCL, maximo, minimo;
     int max_iteracoes, carga_atual, posicao_escolhida;
     //int solucao = -1;  // essa variavel ira armazenar a soma das satisfacoes dos professores
 
@@ -69,7 +69,7 @@ int main(){
     iniciar_alocacao(alocacao);
 
     int p = 0; // no começo, eu estou no professor p
-    max_iteracoes = 1;
+    max_iteracoes = 3;
     for(int i = 0; i < max_iteracoes; i++){
 
         // os candidatos vao ser os as disciplinas que o professor p pode ministrar
@@ -83,6 +83,7 @@ int main(){
         
         // para entrar na lista duas coisas devem ser atendidas: o professor pode ministrar essa disciplina
         // E ela nao pode ter sido alocado para nenhum outro professor ate ent
+        n_cand = 0;
         for(int d = 0; d < DISCIPLINAS; d++){
             // vou fazer por enquanto so a primeira restricao
             if(disc.G[p][d] > 0){
@@ -117,10 +118,7 @@ int main(){
            posicao_escolhida = numero_aleatorio(n_RCL);  // esse numero retornado vai ser a disciplina que vai ser alocada para o professor p
            printf("Numero escolhido pela funcao aleatoria: %d\n", posicao_escolhida);
            alocacao[RCL[posicao_escolhida].disciplina].professor = p;  // colocando na disciplina que foi escolhida o professor p
-            //printf("numero escolhido na funcao aleatoria: %d\nDisciplina escolhida para o professor %d: %d\n",posicao_escolhida, p+1, RCL[posicao_escolhida].disciplina);
-
-            alocacao[posicao_escolhida].professor = p;   // colocando na disciplina d (que foi)
-           // alocacao[posicao_escolhida].prioridade = disc.G[p][d];
+           alocacao[RCL[posicao_escolhida].disciplina].prioridade = RCL[posicao_escolhida].prioridade;  // colocando na disciplina que foi escolhida a prioridade que o professor escolhido possui nela
 
             // printando o vetor de alocacao para ver como esta a solucao ate o momento
             printf("disciplina alocada para o professor %d: %d\n", p+1,RCL[posicao_escolhida].disciplina);
@@ -132,19 +130,17 @@ int main(){
 
             free(RCL);
 
-
+            //imprimir(alocacao);
             printf("\n====== FIM DE UMA ITERACAO!! ========\n");
         } 
+
         free(candidatos);
 
         p++;
 
     }
 
-
-    //fase_construtiva(alocacao);
-
-    imprimir(alocacao);
+   imprimir(alocacao);
 }
 
 void iniciar_alocacao(Alocacao *alocacao){
@@ -261,8 +257,8 @@ void atualiza_candidatos(Candidatos *candidatos, int *n_cand, int disciplina){
 
     for(int i = 0; i < *n_cand; i++){
         if(candidatos[i].disciplina == disciplina){
-            candidatos[i].disciplina = candidatos[*n_cand].disciplina;
-            candidatos[i].prioridade = candidatos[*n_cand].prioridade;
+            candidatos[i].disciplina = candidatos[(*n_cand)-1].disciplina;
+            candidatos[i].prioridade = candidatos[(*n_cand)-1].prioridade;
             break;
         }
     }
@@ -280,6 +276,6 @@ void atualiza_candidatos(Candidatos *candidatos, int *n_cand, int disciplina){
 void imprimir(Alocacao *alocacao) {
     printf("alocacao das disciplinas:\n");
     for (int d = 0; d < DISCIPLINAS; d++) {
-        printf("disciplina %d -> professor %d (prioridade %d)\n", d+1, alocacao[d].professor+1, alocacao[d].prioridade);
+        printf("disciplina %d -> professor %d (prioridade %d)\n", d, alocacao[d].professor+1, alocacao[d].prioridade);
     }
 }
