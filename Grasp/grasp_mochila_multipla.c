@@ -14,7 +14,7 @@ typedef struct
 // struct para guardar uma solucao
 typedef struct
 {
-   int label, mochila;
+   int label, weight, mochila;
 }solucao;
 
 void min_max(itemType *candidatos, int n, int *max, int *min);
@@ -85,7 +85,7 @@ int main()
    max_iteracoes = m;  // quant de iteracoes sera no momento a quantidade de mochilas da instancia
    for (int i = 0; i < max_iteracoes; i++)
    {
-      printf("\nMOCHILA %d\n", i+1);
+     // printf("\nMOCHILA %d\n", i+1);
       /*printf("SOLUCAO ATE O MOMENTO:\n");
       for(int i = 0; i < n_solucao; i++){
          printf("%d ", itens_solucao[i]);
@@ -120,22 +120,23 @@ int main()
 
          // maximo e o minimo de candidatos[i];
          min_max(candidatos, n_cand, &maximo, &minimo);
-         printf("maximo: %d, minimo: %d\n", maximo, minimo);
+        // printf("maximo: %d, minimo: %d\n", maximo, minimo);
 
-         printf("LSIAT DE CANDIDATOS ANTES DE EU CRIAR A RCL:\n");
+        /*printf("LSIAT DE CANDIDATOS ANTES DE EU CRIAR A RCL:\n");
          for(int i = 0; i < n_cand; i++){
             printf("%d %d %d\n", candidatos[i].label,candidatos[i].weight ,candidatos[i].value);
-         }
+         }*/
+
          // cria a RCL
          RCL = (itemType *)malloc(sizeof(itemType) * n);
          n_RCL = 0;  // tamanho da RCL tem que ser 0
          cria_RCL(candidatos, RCL, minimo, maximo, alpha, n_cand, &n_RCL);
         
 
-         printf("RCL: (tamanho = %d)\n", n_RCL);
+        /* printf("RCL: (tamanho = %d)\n", n_RCL);
          for(int i = 0; i < n_RCL; i++){
             printf("%d %d %d\n", RCL[i].label,RCL[i].weight ,RCL[i].value);
-         }
+         }*/
 
          // escolhe um item aleatorio da RCL
          posicao_item_escolhido = numero_aleatorio(n_RCL);
@@ -148,12 +149,13 @@ int main()
         // printf("PESO DO ITEM ESCOLHIDO: %d\n", RCL[posicao_item_escolhido].weight);
          capacidade_atual -= RCL[posicao_item_escolhido].weight;
          itens_solucao[n_solucao].label = RCL[posicao_item_escolhido].label;
+         itens_solucao[n_solucao].weight = RCL[posicao_item_escolhido].weight;
          itens_solucao[n_solucao].mochila = i+1;
          /*itens_solucao[n_solucao].label = RCL[posicao_item_escolhido].label;
          itens_solucao[n_solucao].weight = RCL[posicao_item_escolhido].weight;
          itens_solucao[n_solucao].value = RCL[posicao_item_escolhido].value;*/
          n_solucao++;
-         printf("MOCHILA %d\n", i+1);
+         //printf("MOCHILA %d\n", i+1);
 
          // atualizar a lista de candidatos
         // printf("CAPACIDADE ATUAL DA MOCHILA %d: %d\n", i+1, capacidade_atual);
@@ -168,12 +170,37 @@ int main()
 
       free(candidatos);
    }
-
+   int c1, c2, c3, c4, c5;
+   c1 = C[0];
+   c2 = C[1];
+   c3 = C[2];
+   c4 = C[3];
+   c5 = C[4];
    printf("SOLUCAO FINAL:\n");
    for(int i = 0; i < n_solucao; i++){
          printf("ITEM: %d; MOCHILA: %d\n", itens_solucao[i].label, itens_solucao[i].mochila);
-      }
 
+         if(itens_solucao[i].mochila == 1){
+            c1 -= itens_solucao[i].weight;
+         }
+
+         if(itens_solucao[i].mochila == 2){
+            c2 -= itens_solucao[i].weight;
+         }
+
+         if(itens_solucao[i].mochila == 3){
+            c3 -= itens_solucao[i].weight;
+         }
+
+         if(itens_solucao[i].mochila == 4){
+            c4 -= itens_solucao[i].weight;
+         }
+
+         if(itens_solucao[i].mochila == 5){
+            c5 -= itens_solucao[i].weight;
+         }
+      }
+      printf("Capacidade final das mochilas: %d, %d, %d, %d, %d\n", c1, c2, c3, c4, c5);
    printf("\ncusto: %d\n", custo);
    return 0;
 }
