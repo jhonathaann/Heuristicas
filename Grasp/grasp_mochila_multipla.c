@@ -1,4 +1,3 @@
-// Online C compiler to run C program online
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -141,6 +140,7 @@ int main()
          // escolhe um item aleatorio da RCL
          posicao_item_escolhido = numero_aleatorio(n_RCL);
          rotulo = RCL[posicao_item_escolhido].label;  // pegando o rotulo do item escolhido para conseguir remover ele no candidatos
+         printf("%d\n", rotulo);
 
          //printf("ITEM ESCOLHIDO DA RCL: %d\n", RCL[posicao_item_escolhido].label);
 
